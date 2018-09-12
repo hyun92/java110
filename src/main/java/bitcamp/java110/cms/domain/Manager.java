@@ -1,6 +1,9 @@
 package bitcamp.java110.cms.domain;
 
+
+@SuppressWarnings("serial")
 public class Manager extends Member {
+    
     protected String position;
     protected String tel;
 
@@ -17,4 +20,10 @@ public class Manager extends Member {
         this.tel = tel;
     }
 }
+
+
+
+
+
+
 
