@@ -40,8 +40,14 @@ public class App {
                 continue;
             }
             
+            try {
             mapping.getMethod().invoke(mapping.getInstance(), keyIn);
-        }
+        
+            }catch (Exception e) {
+                System.out.println("실행 오류!");
+                System.out.println(e.getCause());  // invoke 하다가 실패한 그 원인 잡아줌
+            }
+            
         
         keyIn.close();
     }

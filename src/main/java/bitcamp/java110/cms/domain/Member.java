@@ -1,12 +1,16 @@
 package bitcamp.java110.cms.domain;
 
+import java.io.Serializable;
+
 public class Member implements Serializable {
     
-    piravte static fianl 
+    private static final long serialVersionUID = 1L; 
     
-    protected String posi
+    protected String name;
     protected String email;
-    protected String password;
+    
+    // Serialize(직렬화) 대상에서 제외 
+    protected transient String password;
     
     public String getName() {
         return name;
