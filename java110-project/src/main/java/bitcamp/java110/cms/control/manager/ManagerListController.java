@@ -24,6 +24,7 @@ public class ManagerListController {
         List<Manager> list = managerDao.findAll();
         for (Manager s : list) {
             System.out.printf("%s, %s, %s, %s, %s\n",
+                    s.getNo(),
                     s.getName(), 
                     s.getEmail(), 
                     s.getPassword(), 
