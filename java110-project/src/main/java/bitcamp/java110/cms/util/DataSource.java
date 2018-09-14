@@ -3,22 +3,21 @@ package bitcamp.java110.cms.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import bitcamp.java110.cms.annotation.Autowired;
-import bitcamp.java110.cms.annotation.Component;
+import org.springframework.stereotype.Component;
 
-@Component  // 객체를 만들자 component!
+@Component
 public class DataSource {
-
     Connection con;
     
-    @Autowired
     public Connection getConnection() throws Exception {
+        
         if (con == null) {
             Class.forName("org.mariadb.jdbc.Driver");
-        con = DriverManager.getConnection(
-                "jdbc:mariadb://localhost:3306/studydb", 
-                "study", "1111");
-    }
-      return this.con;   
+            con = DriverManager.getConnection(
+                    "jdbc:mariadb://localhost:3306/studydb", 
+                    "study", "1111");
+        }
+        
+        return this.con;
     }
 }

@@ -8,24 +8,6 @@ public interface TeacherDao {
     int insert(Teacher teacher);
     List<Teacher> findAll();
     Teacher findByEmail(String email);
-    default Teacher findByNo(int no) {return null;}
-    default int delete(String email) {return 0;}
-    default int delete(int no) {return 0;}
-
-
+    Teacher findByNo(int no);
+    int delete(int no);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
