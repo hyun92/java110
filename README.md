@@ -2,9 +2,21 @@
 
 비트캠프 **자바 110기** 실습 프로젝트
 
-## java110-project (tag: v2.4)
+## java110-project (tag: v2.6)
 
 - Client/Server 구조로 변경
+
+## java110-project (tag: v2.5)
+
+- Spring IoC 컨테이너 도입
+
+## java110-project (tag: v2.4)
+
+- DB 커넥션 풀 적용
+- DB 연결 객체를 재사용하여 가비지를 줄이고, 실행 속도를 높이기 위함.
+- 
+-
+
 
 ## java110-project (tag: v2.3)
 
