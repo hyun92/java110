@@ -25,7 +25,7 @@ public class ManagerDetailController {
         Manager m = managerDao.findByNo(no);
         
         if (m == null) {
-            System.out.println("해당 이메일의 매니저가 없습니다!");
+            System.out.println("해당 번호의 매니저가 없습니다!");
             return;
         }
         
