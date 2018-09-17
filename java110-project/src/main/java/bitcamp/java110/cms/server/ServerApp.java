@@ -3,7 +3,7 @@ package bitcamp.java110.cms.server;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -18,47 +18,23 @@ public class ServerApp {
     RequestMappingHandlerMapping requestHandlerMap;
     
     public ServerApp() throws Exception {
-        
         createIoCContainer();
+        logBeansOfContainer();
         processRequestMappingAnnotation();
-        prepareRequestHandlerMap();
     }
     
-       
-    private void processRequestMappingAnnotation() {
-        requestHandlerMap =  new RequestMappingHandlerMapping();
-        String[] names = iocContainer.getBeanDefinitionNames();
-        for (String name : names) {
-            // => 이름으로 객체를 꺼낸다.
-            Object obj = iocContainer.getBean(name);
-            
-            // => 객체에서 @RequestMapping이 붙은 메서드를 찾아 저장한다.
-            requestHandlerMap.addMapping(obj);
-        
-    }
-    }
-
     private void createIoCContainer() {
-        iocContainer =    new ClassPathXmlApplicationContext(
-           "bitcamp/java110/cms/conf/application-context.xml");
-        
+        iocContainer = new ClassPathXmlApplicationContext(
+                "bitcamp/java110/cms/conf/application-context.xml");
     }
-        
-       
     
-  
-    private void prepareRequestHandlerMap() {
-        
-        requestHandlerMap =  new RequestMappingHandlerMapping();
+    private void processRequestMappingAnnotation() {
+        requestHandlerMap = new RequestMappingHandlerMapping();
         String[] names = iocContainer.getBeanDefinitionNames();
         for (String name : names) {
-            // => 이름으로 객체를 꺼낸다.
             Object obj = iocContainer.getBean(name);
-            
-            // => 객체에서 @RequestMapping이 붙은 메서드를 찾아 저장한다.
             requestHandlerMap.addMapping(obj);
         }
-        
     }
     
     private void logBeansOfContainer() {
@@ -71,23 +47,24 @@ public class ServerApp {
     }
     
     public void service() throws Exception {
-        
         // 클라이언트 연결을 기다리는 서버 소켓 준비
         ServerSocket serverSocket = new ServerSocket(8888);
         System.out.println("서버 실행 중...");
         
         while (true) {
             try (
-                Socket socket = serverSocket.accept();
-                PrintStream out = new PrintStream(
-                                    new BufferedOutputStream(
-                                            socket.getOutputStream()));
-                BufferedReader in = new BufferedReader(
-                                   new InputStreamReader(
-                                      socket.getInputStream()));
-            ) {
+                    //서버에 연결하기
+                    Socket socket = serverSocket.accept();
+                    //서버에 데이터를 보내고 읽을 도구를 준비한다.
+                    PrintWriter out = new PrintWriter(
+                            new BufferedOutputStream(
+                                    socket.getOutputStream()));
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(
+                                    socket.getInputStream()));
+                    ) {
                 System.out.println(in.readLine());
-                out.println("OK - 현경훈"); out.flush();
+                out.println("OK:강사"); out.flush();
                 
                 while (true) {
                     String requestLine = in.readLine();
@@ -98,7 +75,16 @@ public class ServerApp {
                         break;
                     }
                     
-                    RequestMappingHandler mapping = requestHandlerMap.getMapping(requestLine);
+                  //요청 객체 준비
+                    Request request = new Request(requestLine);
+                    
+                    
+                    //응답 객체 준비
+                    Response response = new Response(out);
+                    
+                    
+                    RequestMappingHandler mapping =
+                            requestHandlerMap.getMapping(request.getAppPath()); //requestLine써서  전부로 하면 안돼!
                     if (mapping == null) {
                         out.println("해당 요청을 처리할 수 없습니다.");
                         out.println();
@@ -107,48 +93,25 @@ public class ServerApp {
                     }
                     
                     try {
-                        mapping.getMethod().invoke(mapping.getInstance(), out);
-                        out.println();
                         
+                        //요청 핸들러 호출
+                        mapping.getMethod().invoke(mapping.getInstance(), out);
+                    
                     } catch (Exception e) {
                         e.printStackTrace();
-                        out.println("요청 처리중에 오류가 발생했습니다.");
-                        
+                        out.println("요청 처리 중에 오류가 발생했습니다.");
                     }
                     out.println();
                     out.flush();
                 }
-                    
-                    
-                    
-                   
-                }
                 
             }
         }
-        
- 
+    }
     
     public static void main(String[] args) throws Exception {
         ServerApp serverApp = new ServerApp();
         serverApp.service();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

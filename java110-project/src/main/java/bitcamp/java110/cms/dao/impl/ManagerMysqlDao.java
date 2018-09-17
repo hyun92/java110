@@ -67,7 +67,7 @@ public class ManagerMysqlDao implements ManagerDao {
         }
     }
     
-    public List<Manager> findAll() {
+    public List<Manager> findAll() throws{
         
         ArrayList<Manager> list = new ArrayList<>();
         
