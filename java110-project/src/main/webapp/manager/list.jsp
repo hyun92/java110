@@ -52,11 +52,12 @@ if(list == null) {
 //ArrayList list = (ArrayLsit) request.getAttribute("list");
 
 for (Manager m : list) {
+    pageContext.setAttribute("m", m);
 %>
 <tr>
-    <td><%=m.getNo()%></td>
-    <td><a href='detail?no=<%=m.getNo()%>'><%=m.getName()%></a></td>
-    <td><%=m.getEmail()%></td>
+    <td>${m.no}</td>
+    <td><a href='detail?no=${m.no}'>${m.name}</a></td>
+    <td>${m.email}</td>
     <td><%=m.getPosition()%></td>
 </tr>
 <%
