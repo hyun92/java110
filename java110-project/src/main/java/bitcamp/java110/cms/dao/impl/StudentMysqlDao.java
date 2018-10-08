@@ -6,20 +6,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import bitcamp.java110.cms.dao.DaoException;
 import bitcamp.java110.cms.dao.StudentDao;
 import bitcamp.java110.cms.domain.Student;
 import bitcamp.java110.cms.util.DataSource;
 
-@Component
 public class StudentMysqlDao implements StudentDao {
 
     DataSource dataSource;
     
-    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -109,7 +104,7 @@ public class StudentMysqlDao implements StudentDao {
         return list;
     }
     
-    public Student findByEmail(String email)throws DaoException {
+    public Student findByEmail(String email) throws DaoException {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -208,7 +203,7 @@ public class StudentMysqlDao implements StudentDao {
             int count = stmt.executeUpdate(sql);
             
             if (count == 0)
-                return 0;
+                throw new Exception("일치하는 번호가 없습니다.");
             
             String sql2 = "delete from p1_memb where mno=" + no;
             stmt.executeUpdate(sql2);
@@ -221,6 +216,53 @@ public class StudentMysqlDao implements StudentDao {
             throw new DaoException(e);
             
         } finally {
+            try {stmt.close();} catch (Exception e) {}
+        }
+    }
+    
+    @Override
+    public Student findByEmailPassword(String email, String password) throws DaoException {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            con = dataSource.getConnection();
+            
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(
+                    "select" + 
+                    " m.mno," +
+                    " m.name," + 
+                    " m.email," + 
+                    " m.tel," + 
+                    " s.schl," +
+                    " s.work" + 
+                    " from p1_stud s" + 
+                    " inner join p1_memb m on s.sno = m.mno" +
+                    " where m.email='" + email + 
+                    "' and m.pwd=password('" + password +
+                    "')");
+            
+            if (rs.next()) {
+                Student s = new Student();
+                s.setNo(rs.getInt("mno"));
+                s.setEmail(rs.getString("email"));
+                s.setName(rs.getString("name"));
+                s.setTel(rs.getString("tel"));
+                s.setSchool(rs.getString("schl"));
+                s.setWorking(rs.getString("work").equals("Y") ? true : false);
+                
+                
+                return s;
+            }
+            return null;
+            
+        } catch (Exception e) {
+            throw new DaoException(e);
+            
+        } finally {
+            try {rs.close();} catch (Exception e) {}
             try {stmt.close();} catch (Exception e) {}
         }
     }

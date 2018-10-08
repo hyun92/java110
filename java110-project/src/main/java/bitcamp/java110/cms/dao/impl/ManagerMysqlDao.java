@@ -6,25 +6,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import bitcamp.java110.cms.dao.DaoException;
 import bitcamp.java110.cms.dao.ManagerDao;
 import bitcamp.java110.cms.domain.Manager;
 import bitcamp.java110.cms.util.DataSource;
 
-@Component
 public class ManagerMysqlDao implements ManagerDao {
     
     DataSource dataSource;
     
-    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public int insert(Manager manager) {
+    public int insert(Manager manager) throws DaoException {
         Statement stmt = null;
         
         Connection con = null;
@@ -67,7 +62,7 @@ public class ManagerMysqlDao implements ManagerDao {
         }
     }
     
-    public List<Manager> findAll() throws{
+    public List<Manager> findAll() throws DaoException {
         
         ArrayList<Manager> list = new ArrayList<>();
         
@@ -108,7 +103,7 @@ public class ManagerMysqlDao implements ManagerDao {
         return list;
     }
     
-    public Manager findByEmail(String email) {
+    public Manager findByEmail(String email) throws DaoException {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -149,7 +144,7 @@ public class ManagerMysqlDao implements ManagerDao {
         }
     }
     
-    public Manager findByNo(int no) {
+    public Manager findByNo(int no) throws DaoException {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -190,7 +185,7 @@ public class ManagerMysqlDao implements ManagerDao {
         }
     }
     
-    public int delete(int no) {
+    public int delete(int no) throws DaoException {
         Connection con = null;
         Statement stmt = null;
         
@@ -204,7 +199,7 @@ public class ManagerMysqlDao implements ManagerDao {
             int count = stmt.executeUpdate(sql);
             
             if (count == 0)
-                return 0;
+                throw new Exception("일치하는 번호가 없습니다.");
             
             String sql2 = "delete from p1_memb where mno=" + no;
             stmt.executeUpdate(sql2);
@@ -217,6 +212,50 @@ public class ManagerMysqlDao implements ManagerDao {
             throw new DaoException(e);
             
         } finally {
+            try {stmt.close();} catch (Exception e) {}
+        }
+    }
+    
+    @Override
+    public Manager findByEmailPassword(String email, String password) throws DaoException {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            con = dataSource.getConnection();
+            
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(
+                    "select" + 
+                    " m.mno," +
+                    " m.name," + 
+                    " m.email," + 
+                    " m.tel," + 
+                    " mr.posi" + 
+                    " from p1_mgr mr" + 
+                    " inner join p1_memb m on mr.mrno = m.mno" +
+                    " where m.email='" + email + 
+                    "' and m.pwd=password('" + password +
+                    "')");
+            
+            if (rs.next()) {
+                Manager mgr = new Manager();
+                mgr.setNo(rs.getInt("mno"));
+                mgr.setEmail(rs.getString("email"));
+                mgr.setName(rs.getString("name"));
+                mgr.setTel(rs.getString("tel"));
+                mgr.setPosition(rs.getString("posi"));
+                
+                return mgr;
+            }
+            return null;
+            
+        } catch (Exception e) {
+            throw new DaoException(e);
+            
+        } finally {
+            try {rs.close();} catch (Exception e) {}
             try {stmt.close();} catch (Exception e) {}
         }
     }

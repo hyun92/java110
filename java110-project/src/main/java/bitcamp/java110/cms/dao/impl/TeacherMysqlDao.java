@@ -6,25 +6,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import bitcamp.java110.cms.dao.DaoException;
 import bitcamp.java110.cms.dao.TeacherDao;
 import bitcamp.java110.cms.domain.Teacher;
 import bitcamp.java110.cms.util.DataSource;
 
-@Component
 public class TeacherMysqlDao implements TeacherDao {
 
     DataSource dataSource;
     
-    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public int insert(Teacher teacher)throws DaoException {
+    public int insert(Teacher teacher) throws DaoException {
         Connection con = null;
         Statement stmt = null;
         
@@ -109,7 +104,7 @@ public class TeacherMysqlDao implements TeacherDao {
         return list;
     }
     
-    public Teacher findByEmail(String email) throws DaoException  {
+    public Teacher findByEmail(String email) throws DaoException {
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -208,7 +203,7 @@ public class TeacherMysqlDao implements TeacherDao {
             int count = stmt.executeUpdate(sql);
             
             if (count == 0)
-                return 0;
+                throw new Exception("일치하는 번호가 없습니다.");
             
             String sql2 = "delete from p1_memb where mno=" + no;
             stmt.executeUpdate(sql2);
@@ -221,6 +216,52 @@ public class TeacherMysqlDao implements TeacherDao {
             throw new DaoException(e);
             
         } finally {
+            try {stmt.close();} catch (Exception e) {}
+        }
+    }
+    
+    @Override
+    public Teacher findByEmailPassword(String email, String password) throws DaoException {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            con = dataSource.getConnection();
+            
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(
+                    "select" + 
+                    " m.mno," +
+                    " m.name," + 
+                    " m.email," + 
+                    " m.tel," + 
+                    " t.hrpay," +
+                    " t.subj" +
+                    " from p1_tchr t" + 
+                    " inner join p1_memb m on t.tno = m.mno" +
+                    " where m.email='" + email + 
+                    "' and m.pwd=password('" + password +
+                    "')");
+            
+            if (rs.next()) {
+                Teacher t = new Teacher();
+                t.setNo(rs.getInt("mno"));
+                t.setEmail(rs.getString("email"));
+                t.setName(rs.getString("name"));
+                t.setTel(rs.getString("tel"));
+                t.setPay(rs.getInt("hrpay"));
+                t.setSubjects(rs.getString("subj"));
+                
+                return t;
+            }
+            return null;
+            
+        } catch (Exception e) {
+            throw new DaoException(e);
+            
+        } finally {
+            try {rs.close();} catch (Exception e) {}
             try {stmt.close();} catch (Exception e) {}
         }
     }
