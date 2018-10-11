@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>El</title>
+<title>EL</title>
 </head>
 <body>
 <h1>EL - 배열에서 값 꺼내기</h1>
@@ -19,8 +19,17 @@ ${names[1]}<br>
 ${names[2]}<br>
 ${names[3]}<br>
 
-
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
 
 

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>El</title>
+<title>EL</title>
 </head>
 <body>
 <h1>EL - List 객체에서 값 꺼내기</h1>
@@ -30,5 +30,15 @@ ${nameList[0]}<br>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
 
 

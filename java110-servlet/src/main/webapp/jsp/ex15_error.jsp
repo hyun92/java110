@@ -11,16 +11,48 @@
 <title>JSP액션태그</title>
 </head>
 <body>
-<h1>jsp:forward - RequestDispatcher.forward()</h1>
-
-
-<pre>
-- 다른 서블릿(또는 JSP)으로 실행을 위임한다.
-   &lt;jsp:forward page="서블릿 또는 JSP URL">
-</pre>
 
 <p>연산자 '<%=request.getParameter("op")%>'를 지원하지 않습니다!</p>
 
-
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

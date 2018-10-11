@@ -48,7 +48,7 @@ import 속성
         import="java.net.*,java.util.*"
     - 예2) import를 각각의 page 지시명령으로 작성할 수 있다.
         &lt;%@ page import="java.net.*"%>
-        &lt;%@ page import="java.util.*"%>
+        &lt;%@ page import="java.util.*"%>   
         
 trimDirectiveWhitespaces 속성
     - true로 설정하면, 지시명령어 태그 뒤에 붙는 줄바꿈 코드는 출력하지 않는다.  
