@@ -1,4 +1,4 @@
-﻿package bitcamp.java110.cms.listener;
+package bitcamp.java110.cms.listener;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -14,6 +14,7 @@ import bitcamp.java110.cms.service.impl.ManagerServiceImpl;
 import bitcamp.java110.cms.service.impl.StudentServiceImpl;
 import bitcamp.java110.cms.service.impl.TeacherServiceImpl;
 import bitcamp.java110.cms.util.DataSource;
+import bitcamp.java110.cms.util.TransactionManager;
 
 //@WebListener
 public class ContextLoaderListener implements ServletContextListener {
@@ -31,6 +32,9 @@ public class ContextLoaderListener implements ServletContextListener {
                     sc.getInitParameter("jdbc.url"),
                     sc.getInitParameter("jdbc.username"),
                     sc.getInitParameter("jdbc.password"));
+            
+            TransactionManager txManager = TransactionManager.getInstance();
+            txManager.setDataSource(dataSource);
             
             // DAO 객체 생성 및 DB 커네션풀 주입하기
             MemberMysqlDao memberDao = new MemberMysqlDao();
