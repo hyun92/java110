@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
+
 import bitcamp.java110.cms.domain.Student;
 import bitcamp.java110.cms.service.StudentService;
 
@@ -22,11 +24,30 @@ public class StudentListServlet extends HttpServlet {
             HttpServletRequest request, 
             HttpServletResponse response) 
             throws ServletException, IOException {
+
+        int pageNo = 1;
+        int pageSize = 3;
         
-        StudentService studentService = (StudentService)this.getServletContext()
-                .getAttribute("studentService");
+        if (request.getParameter("pageNo") != null) {
+            pageNo = Integer.parseInt(request.getParameter("pageNo"));
+            if (pageNo < 1)
+                pageNo = 1;
+        }
         
-        List<Student> list = studentService.list();
+        if (request.getParameter("pageSize") != null) {
+            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+            if (pageSize < 3 || pageSize > 10)
+                pageSize = 3;
+        }
+        
+        ApplicationContext iocContainer=  
+                (ApplicationContext)this.getServletContext().getAttribute("iocContainer");
+       
+        
+        StudentService studentService = 
+                iocContainer.getBean(StudentService.class);
+        
+        List<Student> list = studentService.list(pageNo, pageSize);
         request.setAttribute("list", list);
         
         response.setContentType("text/html;charset=UTF-8");
