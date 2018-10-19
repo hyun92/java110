@@ -95,24 +95,3 @@ public class ManagerAddServlet extends HttpServlet {
     
 }
     
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-    
-    
-    
-    

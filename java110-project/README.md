@@ -1,5 +1,13 @@
 # java110-project
 
+## v6.0
+
+- Mybatis와 Spring IoC 컨테이너 연동
+- 작업
+   -mybatis-spring 연동 라이브러리 가져오기
+       -mvnrepository.com
+       -build.gradle에 라이브러리 정보 등록
+
 ## v5.8
 
 - Mybatis에서 자동으로 생성해주는 Mapper(DAO) 객체 사용하기
@@ -10,6 +18,19 @@
     - Service 객체는 SqlSessionFactory를 통해 DAO를 얻어 쓴다.
     - insert, delete 메서드에 트랜잭션을 적용한다.
     - ContextLoaderListener 변경
+    - 'gradle eclipse'실행
+    - 이클립스 프로젝트 리프래시
+- mybatis-spring 문서 참고하여 스프링 설정하기
+   -mybatis.org 사이트 => github.com => spring 저장소 => 문서
+   - 즐겨찾기에 등록
+   - jdbc.properties 파일 로딩
+      -@PropertySource 애노테이션 사용
+   - DataSource 객체 준비
+      - apache common-dbcp 라이브러리 추가
+   - sqlSessionFactory 객체 생성
+      - XML 기반 mybatis 설정을 스프링 Java Config로 대체한다.
+      - mybatis-spring 라이브러리에서 제공하는 SqlSessionFactoryBean 을 사용한다.
+      - 의존 라이브러리 spring-jdbc를 추가해야 한다.
 
 ## v5.5
 

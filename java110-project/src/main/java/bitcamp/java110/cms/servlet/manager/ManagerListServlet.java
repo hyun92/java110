@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationContext;
 
 import bitcamp.java110.cms.domain.Manager;
-import bitcamp.java110.cms.service.AuthService;
 import bitcamp.java110.cms.service.ManagerService;
 
 @WebServlet("/manager/list")
@@ -41,11 +40,10 @@ public class ManagerListServlet extends HttpServlet {
                 pageSize = 3;
         }
         
-        ApplicationContext iocContainer=  
-                (ApplicationContext)this.getServletContext().getAttribute("iocContainer");
+        ApplicationContext iocContainer = (ApplicationContext)this.getServletContext().getAttribute("iocContainer");
         
-        ManagerService managerService = 
-                iocContainer.getBean(ManagerService.class);
+        ManagerService managerService = iocContainer.getBean(ManagerService.class);
+
         
         List<Manager> list = managerService.list(pageNo, pageSize);
         
@@ -58,7 +56,6 @@ public class ManagerListServlet extends HttpServlet {
         rd.include(request, response);
     }
 }
-
 
 
 

@@ -20,7 +20,6 @@ public class ContextLoaderListener implements ServletContextListener {
             ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
             
             sc.setAttribute("iocContainer", context);
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
